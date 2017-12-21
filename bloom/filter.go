@@ -9,10 +9,10 @@ import (
 	"math"
 	"sync"
 
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/txscript"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/btcsuite/btcutil"
+	"github.com/nargott/godash/chaincfg/chainhash"
+	"github.com/nargott/godash/txscript"
+	"github.com/nargott/godash/wire"
+	"github.com/nargott/btcutil"
 )
 
 // ln2Squared is simply the square of the natural log of 2.

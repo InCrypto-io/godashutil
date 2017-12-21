@@ -9,9 +9,9 @@ import (
 	"errors"
 	"sort"
 
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/btcsuite/btcutil"
+	"github.com/nargott/godash/chaincfg/chainhash"
+	"github.com/nargott/godash/wire"
+	"github.com/nargott/btcutil"
 )
 
 // Coin represents a spendable transaction outpoint

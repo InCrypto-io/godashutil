@@ -21,7 +21,7 @@ provided.
 ## Installation and Updating
 
 ```bash
-$ go get -u github.com/btcsuite/btcutil
+$ go get -u github.com/nargott/btcutil
 ```
 
 ## GPG Verification Key
