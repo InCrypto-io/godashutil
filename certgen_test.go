@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dashpay/godashutil"
+	"github.com/nargott/godashutil"
 	//"github.com/davecgh/go-spew/spew"
 )
 

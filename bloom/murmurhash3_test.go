@@ -8,7 +8,7 @@ package bloom_test
 import (
 	"testing"
 
-	"github.com/dashpay/godashutil/bloom"
+	"github.com/nargott/godashutil/bloom"
 )
 
 // TestMurmurHash3 ensure the MurmurHash3 function produces the correct hash
