@@ -1,5 +1,4 @@
-// Copyright (c) 2015 The btcsuite developers
-// Copyright (c) 2016 The Dash developers
+// Copyright (c) 2015-2016 The btcsuite developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
@@ -12,7 +11,8 @@ import (
 	"bytes"
 	"sort"
 
-	"github.com/dashpay/godash/wire"
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	"github.com/btcsuite/btcd/wire"
 )
 
 // InPlaceSort modifies the passed transaction inputs and outputs to be sorted
@@ -21,7 +21,7 @@ import (
 // WARNING: This function must NOT be called with published transactions since
 // it will mutate the transaction if it's not already sorted.  This can cause
 // issues if you mutate a tx in a block, for example, which would invalidate the
-// block.  It could also cause cached hashes, such as in a godashutil.Tx to become
+// block.  It could also cause cached hashes, such as in a btcutil.Tx to become
 // invalidated.
 //
 // The function should only be used if the caller is creating the transaction or
@@ -77,7 +77,7 @@ func (s sortableInputSlice) Less(i, j int) bool {
 
 	// At this point, the hashes are not equal, so reverse them to
 	// big-endian and return the result of the comparison.
-	const hashSize = wire.HashSize
+	const hashSize = chainhash.HashSize
 	for b := 0; b < hashSize/2; b++ {
 		ihash[b], ihash[hashSize-1-b] = ihash[hashSize-1-b], ihash[b]
 		jhash[b], jhash[hashSize-1-b] = jhash[hashSize-1-b], jhash[b]

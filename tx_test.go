@@ -1,9 +1,8 @@
-// Copyright (c) 2013-2014 The btcsuite developers
-// Copyright (c) 2016 The Dash developers
+// Copyright (c) 2013-2016 The btcsuite developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-package godashutil_test
+package btcutil_test
 
 import (
 	"bytes"
@@ -11,15 +10,15 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/dashpay/godash/wire"
-	"github.com/dashpay/godashutil"
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	"github.com/btcsuite/btcutil"
 	"github.com/davecgh/go-spew/spew"
 )
 
 // TestTx tests the API for Tx.
 func TestTx(t *testing.T) {
 	testTx := Block100000.Transactions[0]
-	tx := godashutil.NewTx(testTx)
+	tx := btcutil.NewTx(testTx)
 
 	// Ensure we get the same data back out.
 	if msgTx := tx.MsgTx(); !reflect.DeepEqual(msgTx, testTx) {
@@ -36,18 +35,18 @@ func TestTx(t *testing.T) {
 	}
 
 	// Hash for block 100,000 transaction 0.
-	wantShaStr := "8c14f0db3df150123e6f3dbbf30f8b955a8249b62ac1d1ff16284aefa3d06d87"
-	wantSha, err := wire.NewShaHashFromStr(wantShaStr)
+	wantHashStr := "8c14f0db3df150123e6f3dbbf30f8b955a8249b62ac1d1ff16284aefa3d06d87"
+	wantHash, err := chainhash.NewHashFromStr(wantHashStr)
 	if err != nil {
-		t.Errorf("NewShaHashFromStr: %v", err)
+		t.Errorf("NewHashFromStr: %v", err)
 	}
 
-	// Request the sha multiple times to test generation and caching.
+	// Request the hash multiple times to test generation and caching.
 	for i := 0; i < 2; i++ {
-		sha := tx.Sha()
-		if !sha.IsEqual(wantSha) {
-			t.Errorf("Sha #%d mismatched sha - got %v, want %v", i,
-				sha, wantSha)
+		hash := tx.Hash()
+		if !hash.IsEqual(wantHash) {
+			t.Errorf("Hash #%d mismatched hash - got %v, want %v", i,
+				hash, wantHash)
 		}
 	}
 }
@@ -64,7 +63,7 @@ func TestNewTxFromBytes(t *testing.T) {
 	testTxBytes := testTxBuf.Bytes()
 
 	// Create a new transaction from the serialized bytes.
-	tx, err := godashutil.NewTxFromBytes(testTxBytes)
+	tx, err := btcutil.NewTxFromBytes(testTxBytes)
 	if err != nil {
 		t.Errorf("NewTxFromBytes: %v", err)
 		return
@@ -90,7 +89,7 @@ func TestTxErrors(t *testing.T) {
 
 	// Truncate the transaction byte buffer to force errors.
 	shortBytes := testTxBytes[:4]
-	_, err = godashutil.NewTxFromBytes(shortBytes)
+	_, err = btcutil.NewTxFromBytes(shortBytes)
 	if err != io.EOF {
 		t.Errorf("NewTxFromBytes: did not get expected error - "+
 			"got %v, want %v", err, io.EOF)

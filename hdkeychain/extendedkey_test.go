@@ -1,9 +1,8 @@
-// Copyright (c) 2014 The btcsuite developers
-// Copyright (c) 2016 The Dash developers
+// Copyright (c) 2014-2017 The btcsuite developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-package hdkeychain_test
+package hdkeychain
 
 // References:
 //   [BIP32]: BIP0032 - Hierarchical Deterministic Wallets
@@ -13,11 +12,11 @@ import (
 	"bytes"
 	"encoding/hex"
 	"errors"
+	"math"
 	"reflect"
 	"testing"
 
-	"github.com/dashpay/godash/chaincfg"
-	"github.com/dashpay/godashutil/hdkeychain"
+	"github.com/btcsuite/btcd/chaincfg"
 )
 
 // TestBIP0032Vectors tests the vectors provided by [BIP32] to ensure the
@@ -26,6 +25,7 @@ func TestBIP0032Vectors(t *testing.T) {
 	// The master seeds for each of the two test vectors in [BIP32].
 	testVec1MasterHex := "000102030405060708090a0b0c0d0e0f"
 	testVec2MasterHex := "fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542"
+	testVec3MasterHex := "4b381541583be4423346c643850da4b320e46a87ae3d2a4e6da11eba819cd4acba45d239319ac14f863b8d5ab5a0d0c64d2e8a1e7d1457df2e5a3c51c73235be"
 	hkStart := uint32(0x80000000)
 
 	tests := []struct {
@@ -136,6 +136,24 @@ func TestBIP0032Vectors(t *testing.T) {
 			net:      &chaincfg.MainNetParams,
 		},
 
+		// Test vector 3
+		{
+			name:     "test vector 3 chain m",
+			master:   testVec3MasterHex,
+			path:     []uint32{},
+			wantPub:  "xpub661MyMwAqRbcEZVB4dScxMAdx6d4nFc9nvyvH3v4gJL378CSRZiYmhRoP7mBy6gSPSCYk6SzXPTf3ND1cZAceL7SfJ1Z3GC8vBgp2epUt13",
+			wantPriv: "xprv9s21ZrQH143K25QhxbucbDDuQ4naNntJRi4KUfWT7xo4EKsHt2QJDu7KXp1A3u7Bi1j8ph3EGsZ9Xvz9dGuVrtHHs7pXeTzjuxBrCmmhgC6",
+			net:      &chaincfg.MainNetParams,
+		},
+		{
+			name:     "test vector 3 chain m/0H",
+			master:   testVec3MasterHex,
+			path:     []uint32{hkStart},
+			wantPub:  "xpub68NZiKmJWnxxS6aaHmn81bvJeTESw724CRDs6HbuccFQN9Ku14VQrADWgqbhhTHBaohPX4CjNLf9fq9MYo6oDaPPLPxSb7gwQN3ih19Zm4Y",
+			wantPriv: "xprv9uPDJpEQgRQfDcW7BkF7eTya6RPxXeJCqCJGHuCJ4GiRVLzkTXBAJMu2qaMWPrS7AANYqdq6vcBcBUdJCVVFceUvJFjaPdGZ2y9WACViL4L",
+			net:      &chaincfg.MainNetParams,
+		},
+
 		// Test vector 1 - Testnet
 		{
 			name:     "test vector 1 chain m - testnet",
@@ -196,7 +214,7 @@ tests:
 			continue
 		}
 
-		extKey, err := hdkeychain.NewMaster(masterSeed, test.net)
+		extKey, err := NewMaster(masterSeed, test.net)
 		if err != nil {
 			t.Errorf("NewMaster #%d (%s): unexpected error when "+
 				"creating new master key: %v", i, test.name,
@@ -211,6 +229,11 @@ tests:
 				t.Errorf("err: %v", err)
 				continue tests
 			}
+		}
+
+		if extKey.Depth() != uint8(len(test.path)) {
+			t.Errorf("Depth of key %d should match fixture path")
+			continue
 		}
 
 		privStr := extKey.String()
@@ -347,7 +370,7 @@ func TestPrivateDerivation(t *testing.T) {
 
 tests:
 	for i, test := range tests {
-		extKey, err := hdkeychain.NewKeyFromString(test.master)
+		extKey, err := NewKeyFromString(test.master)
 		if err != nil {
 			t.Errorf("NewKeyFromString #%d (%s): unexpected error "+
 				"creating extended key: %v", i, test.name,
@@ -466,7 +489,7 @@ func TestPublicDerivation(t *testing.T) {
 
 tests:
 	for i, test := range tests {
-		extKey, err := hdkeychain.NewKeyFromString(test.master)
+		extKey, err := NewKeyFromString(test.master)
 		if err != nil {
 			t.Errorf("NewKeyFromString #%d (%s): unexpected error "+
 				"creating extended key: %v", i, test.name,
@@ -515,7 +538,7 @@ func TestGenenerateSeed(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		seed, err := hdkeychain.GenerateSeed(test.length)
+		seed, err := GenerateSeed(test.length)
 		if !reflect.DeepEqual(err, test.err) {
 			t.Errorf("GenerateSeed #%d (%s): unexpected error -- "+
 				"want %v, got %v", i, test.name, test.err, err)
@@ -557,14 +580,14 @@ func TestExtendedKeyAPI(t *testing.T) {
 			extKey:     "xpub6D4BDPcP2GT577Vvch3R8wDkScZWzQzMMUm3PWbmWvVJrZwQY4VUNgqFJPMM3No2dFDFGTsxxpG5uJh7n7epu4trkrX7x7DogT5Uv6fcLW5",
 			isPrivate:  false,
 			parentFP:   3203769081,
-			privKeyErr: hdkeychain.ErrNotPrivExtKey,
+			privKeyErr: ErrNotPrivExtKey,
 			pubKey:     "0357bfe1e341d01c69fe5654309956cbea516822fba8a601743a012a7896ee8dc2",
 			address:    "1NjxqbA9aZWnh17q1UW3rB4EPu79wDXj7x",
 		},
 	}
 
 	for i, test := range tests {
-		key, err := hdkeychain.NewKeyFromString(test.extKey)
+		key, err := NewKeyFromString(test.extKey)
 		if err != nil {
 			t.Errorf("NewKeyFromString #%d (%s): unexpected "+
 				"error: %v", i, test.name, err)
@@ -724,7 +747,7 @@ func TestNet(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		extKey, err := hdkeychain.NewKeyFromString(test.key)
+		extKey, err := NewKeyFromString(test.key)
 		if err != nil {
 			t.Errorf("NewKeyFromString #%d (%s): unexpected error "+
 				"creating extended key: %v", i, test.name,
@@ -778,41 +801,38 @@ func TestNet(t *testing.T) {
 func TestErrors(t *testing.T) {
 	// Should get an error when seed has too few bytes.
 	net := &chaincfg.MainNetParams
-	_, err := hdkeychain.NewMaster(bytes.Repeat([]byte{0x00}, 15), net)
-	if err != hdkeychain.ErrInvalidSeedLen {
-		t.Errorf("NewMaster: mismatched error -- got: %v, want: %v",
-			err, hdkeychain.ErrInvalidSeedLen)
+	_, err := NewMaster(bytes.Repeat([]byte{0x00}, 15), net)
+	if err != ErrInvalidSeedLen {
+		t.Fatalf("NewMaster: mismatched error -- got: %v, want: %v",
+			err, ErrInvalidSeedLen)
 	}
 
 	// Should get an error when seed has too many bytes.
-	_, err = hdkeychain.NewMaster(bytes.Repeat([]byte{0x00}, 65), net)
-	if err != hdkeychain.ErrInvalidSeedLen {
-		t.Errorf("NewMaster: mismatched error -- got: %v, want: %v",
-			err, hdkeychain.ErrInvalidSeedLen)
+	_, err = NewMaster(bytes.Repeat([]byte{0x00}, 65), net)
+	if err != ErrInvalidSeedLen {
+		t.Fatalf("NewMaster: mismatched error -- got: %v, want: %v",
+			err, ErrInvalidSeedLen)
 	}
 
 	// Generate a new key and neuter it to a public extended key.
-	seed, err := hdkeychain.GenerateSeed(hdkeychain.RecommendedSeedLen)
+	seed, err := GenerateSeed(RecommendedSeedLen)
 	if err != nil {
-		t.Errorf("GenerateSeed: unexpected error: %v", err)
-		return
+		t.Fatalf("GenerateSeed: unexpected error: %v", err)
 	}
-	extKey, err := hdkeychain.NewMaster(seed, net)
+	extKey, err := NewMaster(seed, net)
 	if err != nil {
-		t.Errorf("NewMaster: unexpected error: %v", err)
-		return
+		t.Fatalf("NewMaster: unexpected error: %v", err)
 	}
 	pubKey, err := extKey.Neuter()
 	if err != nil {
-		t.Errorf("Neuter: unexpected error: %v", err)
-		return
+		t.Fatalf("Neuter: unexpected error: %v", err)
 	}
 
 	// Deriving a hardened child extended key should fail from a public key.
-	_, err = pubKey.Child(hdkeychain.HardenedKeyStart)
-	if err != hdkeychain.ErrDeriveHardFromPublic {
-		t.Errorf("Child: mismatched error -- got: %v, want: %v",
-			err, hdkeychain.ErrDeriveHardFromPublic)
+	_, err = pubKey.Child(HardenedKeyStart)
+	if err != ErrDeriveHardFromPublic {
+		t.Fatalf("Child: mismatched error -- got: %v, want: %v",
+			err, ErrDeriveHardFromPublic)
 	}
 
 	// NewKeyFromString failure tests.
@@ -826,12 +846,12 @@ func TestErrors(t *testing.T) {
 		{
 			name: "invalid key length",
 			key:  "xpub1234",
-			err:  hdkeychain.ErrInvalidKeyLen,
+			err:  ErrInvalidKeyLen,
 		},
 		{
 			name: "bad checksum",
 			key:  "xpub661MyMwAqRbcFtXgS5sYJABqqG9YLmC4Q1Rdap9gSE8NqtwybGhePY2gZ29ESFjqJoCu1Rupje8YtGqsefD265TMg7usUDFdp6W1EBygr15",
-			err:  hdkeychain.ErrBadChecksum,
+			err:  ErrBadChecksum,
 		},
 		{
 			name: "pubkey not on curve",
@@ -848,7 +868,7 @@ func TestErrors(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		extKey, err := hdkeychain.NewKeyFromString(test.key)
+		extKey, err := NewKeyFromString(test.key)
 		if !reflect.DeepEqual(err, test.err) {
 			t.Errorf("NewKeyFromString #%d (%s): mismatched error "+
 				"-- got: %v, want: %v", i, test.name, err,
@@ -896,9 +916,9 @@ func TestZero(t *testing.T) {
 	// Use a closure to test that a key is zeroed since the tests create
 	// keys in different ways and need to test the same things multiple
 	// times.
-	testZeroed := func(i int, testName string, key *hdkeychain.ExtendedKey) bool {
+	testZeroed := func(i int, testName string, key *ExtendedKey) bool {
 		// Zeroing a key should result in it no longer being private
-		if key.IsPrivate() != false {
+		if key.IsPrivate() {
 			t.Errorf("IsPrivate #%d (%s): mismatched key type -- "+
 				"want private %v, got private %v", i, testName,
 				false, key.IsPrivate())
@@ -922,7 +942,7 @@ func TestZero(t *testing.T) {
 			return false
 		}
 
-		wantErr := hdkeychain.ErrNotPrivExtKey
+		wantErr := ErrNotPrivExtKey
 		_, err := key.ECPrivKey()
 		if !reflect.DeepEqual(err, wantErr) {
 			t.Errorf("ECPrivKey #%d (%s): mismatched error: want "+
@@ -963,7 +983,7 @@ func TestZero(t *testing.T) {
 				i, test.name, err)
 			continue
 		}
-		key, err := hdkeychain.NewMaster(masterSeed, test.net)
+		key, err := NewMaster(masterSeed, test.net)
 		if err != nil {
 			t.Errorf("NewMaster #%d (%s): unexpected error when "+
 				"creating new master key: %v", i, test.name,
@@ -989,7 +1009,7 @@ func TestZero(t *testing.T) {
 		}
 
 		// Deserialize key and get the neutered version.
-		key, err = hdkeychain.NewKeyFromString(test.extKey)
+		key, err = NewKeyFromString(test.extKey)
 		if err != nil {
 			t.Errorf("NewKeyFromString #%d (%s): unexpected "+
 				"error: %v", i, test.name, err)
@@ -1012,5 +1032,38 @@ func TestZero(t *testing.T) {
 		if !testZeroed(i, test.name+" deserialized neutered", key) {
 			continue
 		}
+	}
+}
+
+// TestMaximumDepth ensures that attempting to retrieve a child key when already
+// at the maximum depth is not allowed.  The serialization of a BIP32 key uses
+// uint8 to encode the depth.  This implicitly bounds the depth of the tree to
+// 255 derivations.  Here we test that an error is returned after 'max uint8'.
+func TestMaximumDepth(t *testing.T) {
+	net := &chaincfg.MainNetParams
+	extKey, err := NewMaster([]byte(`abcd1234abcd1234abcd1234abcd1234`), net)
+	if err != nil {
+		t.Fatalf("NewMaster: unexpected error: %v", err)
+	}
+
+	for i := uint8(0); i < math.MaxUint8; i++ {
+		if extKey.Depth() != i {
+			t.Fatalf("extendedkey depth %d should match expected value %d",
+				extKey.Depth(), i)
+		}
+		newKey, err := extKey.Child(1)
+		if err != nil {
+			t.Fatalf("Child: unexpected error: %v", err)
+		}
+		extKey = newKey
+	}
+
+	noKey, err := extKey.Child(1)
+	if err != ErrDeriveBeyondMaxDepth {
+		t.Fatalf("Child: mismatched error: want %v, got %v",
+			ErrDeriveBeyondMaxDepth, err)
+	}
+	if noKey != nil {
+		t.Fatal("Child: deriving 256th key should not succeed")
 	}
 }

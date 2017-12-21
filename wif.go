@@ -1,18 +1,17 @@
-// Copyright (c) 2013, 2014 The btcsuite developers
-// Copyright (c) 2016 The Dash developers
+// Copyright (c) 2013-2016 The btcsuite developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-package godashutil
+package btcutil
 
 import (
 	"bytes"
 	"errors"
 
-	"github.com/dashpay/godash/btcec"
-	"github.com/dashpay/godash/chaincfg"
-	"github.com/dashpay/godash/wire"
-	"github.com/dashpay/godashutil/base58"
+	"github.com/btcsuite/btcd/btcec"
+	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	"github.com/btcsuite/btcutil/base58"
 )
 
 // ErrMalformedPrivateKey describes an error where a WIF-encoded private
@@ -111,7 +110,7 @@ func DecodeWIF(wif string) (*WIF, error) {
 	} else {
 		tosum = decoded[:1+btcec.PrivKeyBytesLen]
 	}
-	cksum := wire.DoubleSha256(tosum)[:4]
+	cksum := chainhash.DoubleHashB(tosum)[:4]
 	if !bytes.Equal(cksum, decoded[decodedLen-4:]) {
 		return nil, ErrChecksumMismatch
 	}
@@ -143,7 +142,7 @@ func (w *WIF) String() string {
 	if w.CompressPubKey {
 		a = append(a, compressMagic)
 	}
-	cksum := wire.DoubleSha256(a)[:4]
+	cksum := chainhash.DoubleHashB(a)[:4]
 	a = append(a, cksum...)
 	return base58.Encode(a)
 }

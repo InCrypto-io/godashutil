@@ -1,5 +1,4 @@
-// Copyright (c) 2014, 2016 The btcsuite developers
-// Copyright (c) 2016 The Dash developers
+// Copyright (c) 2014-2016 The btcsuite developers
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
@@ -10,9 +9,10 @@ import (
 	"math"
 	"sync"
 
-	"github.com/dashpay/godash/txscript"
-	"github.com/dashpay/godash/wire"
-	"github.com/dashpay/godashutil"
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	"github.com/btcsuite/btcd/txscript"
+	"github.com/btcsuite/btcd/wire"
+	"github.com/btcsuite/btcutil"
 )
 
 // ln2Squared is simply the square of the natural log of 2.
@@ -167,9 +167,9 @@ func (bf *Filter) Matches(data []byte) bool {
 // This function MUST be called with the filter lock held.
 func (bf *Filter) matchesOutPoint(outpoint *wire.OutPoint) bool {
 	// Serialize
-	var buf [wire.HashSize + 4]byte
+	var buf [chainhash.HashSize + 4]byte
 	copy(buf[:], outpoint.Hash[:])
-	binary.LittleEndian.PutUint32(buf[wire.HashSize:], outpoint.Index)
+	binary.LittleEndian.PutUint32(buf[chainhash.HashSize:], outpoint.Index)
 
 	return bf.matches(buf[:])
 }
@@ -215,10 +215,10 @@ func (bf *Filter) Add(data []byte) {
 	bf.mtx.Unlock()
 }
 
-// AddShaHash adds the passed wire.ShaHash to the Filter.
+// AddHash adds the passed chainhash.Hash to the Filter.
 //
 // This function is safe for concurrent access.
-func (bf *Filter) AddShaHash(hash *wire.ShaHash) {
+func (bf *Filter) AddHash(hash *chainhash.Hash) {
 	bf.mtx.Lock()
 	bf.add(hash[:])
 	bf.mtx.Unlock()
@@ -229,9 +229,9 @@ func (bf *Filter) AddShaHash(hash *wire.ShaHash) {
 // This function MUST be called with the filter lock held.
 func (bf *Filter) addOutPoint(outpoint *wire.OutPoint) {
 	// Serialize
-	var buf [wire.HashSize + 4]byte
+	var buf [chainhash.HashSize + 4]byte
 	copy(buf[:], outpoint.Hash[:])
-	binary.LittleEndian.PutUint32(buf[wire.HashSize:], outpoint.Index)
+	binary.LittleEndian.PutUint32(buf[chainhash.HashSize:], outpoint.Index)
 
 	bf.add(buf[:])
 }
@@ -250,7 +250,7 @@ func (bf *Filter) AddOutPoint(outpoint *wire.OutPoint) {
 // script.
 //
 // This function MUST be called with the filter lock held.
-func (bf *Filter) maybeAddOutpoint(pkScript []byte, outHash *wire.ShaHash, outIdx uint32) {
+func (bf *Filter) maybeAddOutpoint(pkScript []byte, outHash *chainhash.Hash, outIdx uint32) {
 	switch bf.msgFilterLoad.Flags {
 	case wire.BloomUpdateAll:
 		outpoint := wire.NewOutPoint(outHash, outIdx)
@@ -270,10 +270,10 @@ func (bf *Filter) maybeAddOutpoint(pkScript []byte, outHash *wire.ShaHash, outId
 // update flags set via the loaded filter if needed.
 //
 // This function MUST be called with the filter lock held.
-func (bf *Filter) matchTxAndUpdate(tx *godashutil.Tx) bool {
+func (bf *Filter) matchTxAndUpdate(tx *btcutil.Tx) bool {
 	// Check if the filter matches the hash of the transaction.
 	// This is useful for finding transactions when they appear in a block.
-	matched := bf.matches(tx.Sha()[:])
+	matched := bf.matches(tx.Hash()[:])
 
 	// Check if the filter matches any data elements in the public key
 	// scripts of any of the outputs.  When it does, add the outpoint that
@@ -295,7 +295,7 @@ func (bf *Filter) matchTxAndUpdate(tx *godashutil.Tx) bool {
 			}
 
 			matched = true
-			bf.maybeAddOutpoint(txOut.PkScript, tx.Sha(), uint32(i))
+			bf.maybeAddOutpoint(txOut.PkScript, tx.Hash(), uint32(i))
 			break
 		}
 	}
@@ -335,7 +335,7 @@ func (bf *Filter) matchTxAndUpdate(tx *godashutil.Tx) bool {
 // update flags set via the loaded filter if needed.
 //
 // This function is safe for concurrent access.
-func (bf *Filter) MatchTxAndUpdate(tx *godashutil.Tx) bool {
+func (bf *Filter) MatchTxAndUpdate(tx *btcutil.Tx) bool {
 	bf.mtx.Lock()
 	match := bf.matchTxAndUpdate(tx)
 	bf.mtx.Unlock()
