@@ -15,7 +15,7 @@ report.
 ## Installation and Updating
 
 ```bash
-$ go get -u github.com/nargott/btcutil/bloom
+$ go get -u github.com/nargott/godashutil/bloom
 ```
 
 ## Examples

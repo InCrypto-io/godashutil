@@ -11,7 +11,7 @@ import (
 
 	"github.com/nargott/godash/chaincfg/chainhash"
 	"github.com/nargott/godash/wire"
-	"github.com/nargott/btcutil/bloom"
+	"github.com/nargott/godashutil/bloom"
 )
 
 // This example demonstrates how to create a new bloom filter, add a transaction

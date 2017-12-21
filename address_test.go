@@ -2,7 +2,7 @@
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-package btcutil_test
+package godashutil_test
 
 import (
 	"bytes"
@@ -13,7 +13,7 @@ import (
 	"testing"
 
 	"github.com/nargott/godash/chaincfg"
-	"github.com/nargott/btcutil"
+	"github.com/nargott/godashutil"
 	"golang.org/x/crypto/ripemd160"
 )
 
@@ -23,8 +23,8 @@ func TestAddresses(t *testing.T) {
 		addr    string
 		encoded string
 		valid   bool
-		result  btcutil.Address
-		f       func() (btcutil.Address, error)
+		result  godashutil.Address
+		f       func() (godashutil.Address, error)
 		net     *chaincfg.Params
 	}{
 		// Positive P2PKH tests.
@@ -33,16 +33,16 @@ func TestAddresses(t *testing.T) {
 			addr:    "1MirQ9bwyQcGVJPwKUgapu5ouK2E2Ey4gX",
 			encoded: "1MirQ9bwyQcGVJPwKUgapu5ouK2E2Ey4gX",
 			valid:   true,
-			result: btcutil.TstAddressPubKeyHash(
+			result: godashutil.TstAddressPubKeyHash(
 				[ripemd160.Size]byte{
 					0xe3, 0x4c, 0xce, 0x70, 0xc8, 0x63, 0x73, 0x27, 0x3e, 0xfc,
 					0xc5, 0x4c, 0xe7, 0xd2, 0xa4, 0x91, 0xbb, 0x4a, 0x0e, 0x84},
 				chaincfg.MainNetParams.PubKeyHashAddrID),
-			f: func() (btcutil.Address, error) {
+			f: func() (godashutil.Address, error) {
 				pkHash := []byte{
 					0xe3, 0x4c, 0xce, 0x70, 0xc8, 0x63, 0x73, 0x27, 0x3e, 0xfc,
 					0xc5, 0x4c, 0xe7, 0xd2, 0xa4, 0x91, 0xbb, 0x4a, 0x0e, 0x84}
-				return btcutil.NewAddressPubKeyHash(pkHash, &chaincfg.MainNetParams)
+				return godashutil.NewAddressPubKeyHash(pkHash, &chaincfg.MainNetParams)
 			},
 			net: &chaincfg.MainNetParams,
 		},
@@ -51,16 +51,16 @@ func TestAddresses(t *testing.T) {
 			addr:    "12MzCDwodF9G1e7jfwLXfR164RNtx4BRVG",
 			encoded: "12MzCDwodF9G1e7jfwLXfR164RNtx4BRVG",
 			valid:   true,
-			result: btcutil.TstAddressPubKeyHash(
+			result: godashutil.TstAddressPubKeyHash(
 				[ripemd160.Size]byte{
 					0x0e, 0xf0, 0x30, 0x10, 0x7f, 0xd2, 0x6e, 0x0b, 0x6b, 0xf4,
 					0x05, 0x12, 0xbc, 0xa2, 0xce, 0xb1, 0xdd, 0x80, 0xad, 0xaa},
 				chaincfg.MainNetParams.PubKeyHashAddrID),
-			f: func() (btcutil.Address, error) {
+			f: func() (godashutil.Address, error) {
 				pkHash := []byte{
 					0x0e, 0xf0, 0x30, 0x10, 0x7f, 0xd2, 0x6e, 0x0b, 0x6b, 0xf4,
 					0x05, 0x12, 0xbc, 0xa2, 0xce, 0xb1, 0xdd, 0x80, 0xad, 0xaa}
-				return btcutil.NewAddressPubKeyHash(pkHash, &chaincfg.MainNetParams)
+				return godashutil.NewAddressPubKeyHash(pkHash, &chaincfg.MainNetParams)
 			},
 			net: &chaincfg.MainNetParams,
 		},

@@ -39,7 +39,7 @@ report.
 ## Installation and Updating
 
 ```bash
-$ go get -u github.com/nargott/btcutil/hdkeychain
+$ go get -u github.com/nargott/godashutil/hdkeychain
 ```
 
 ## Examples

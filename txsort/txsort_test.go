@@ -12,7 +12,7 @@ import (
 	"testing"
 
 	"github.com/nargott/godash/wire"
-	"github.com/nargott/btcutil/txsort"
+	"github.com/nargott/godashutil/txsort"
 )
 
 // TestSort ensures the transaction sorting works according to the BIP.

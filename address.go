@@ -2,7 +2,7 @@
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-package btcutil
+package godashutil
 
 import (
 	"bytes"
@@ -13,8 +13,8 @@ import (
 
 	"github.com/nargott/godash/btcec"
 	"github.com/nargott/godash/chaincfg"
-	"github.com/nargott/btcutil/base58"
-	"github.com/nargott/btcutil/bech32"
+	"github.com/nargott/godashutil/base58"
+	"github.com/nargott/godashutil/bech32"
 	"golang.org/x/crypto/ripemd160"
 )
 
