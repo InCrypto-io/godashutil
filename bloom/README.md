@@ -1,9 +1,9 @@
 bloom
 =====
 
-[![Build Status](http://img.shields.io/travis/btcsuite/btcutil.svg)](https://travis-ci.org/btcsuite/btcutil)
+[![Build Status](http://img.shields.io/travis/btcsuite/godashutil.svg)](https://travis-ci.org/btcsuite/godashutil)
 [![ISC License](http://img.shields.io/badge/license-ISC-blue.svg)](http://copyfree.org)
-[![GoDoc](http://img.shields.io/badge/godoc-reference-blue.svg)](http://godoc.org/github.com/btcsuite/btcutil/bloom)
+[![GoDoc](http://img.shields.io/badge/godoc-reference-blue.svg)](http://godoc.org/github.com/btcsuite/godashutil/bloom)
 
 Package bloom provides an API for dealing with bitcoin-specific bloom filters.
 
@@ -20,7 +20,7 @@ $ go get -u github.com/nargott/godashutil/bloom
 
 ## Examples
 
-* [NewFilter Example](http://godoc.org/github.com/btcsuite/btcutil/bloom#example-NewFilter)  
+* [NewFilter Example](http://godoc.org/github.com/btcsuite/godashutil/bloom#example-NewFilter)  
   Demonstrates how to create a new bloom filter, add a transaction hash to it,
   and check if the filter matches the transaction.
 

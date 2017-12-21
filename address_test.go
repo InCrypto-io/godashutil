@@ -562,13 +562,13 @@ func TestAddresses(t *testing.T) {
 					0x36, 0x2b, 0x99, 0xd5, 0xe9, 0x1c, 0x6c, 0xe2,
 					0x4d, 0x16, 0x5d, 0xab, 0x93, 0xe8, 0x64, 0x33},
 				chaincfg.TestNet3Params.Bech32HRPSegwit),
-			f: func() (btcutil.Address, error) {
+			f: func() (godashutil.Address, error) {
 				scriptHash := []byte{
 					0x00, 0x00, 0x00, 0xc4, 0xa5, 0xca, 0xd4, 0x62,
 					0x21, 0xb2, 0xa1, 0x87, 0x90, 0x5e, 0x52, 0x66,
 					0x36, 0x2b, 0x99, 0xd5, 0xe9, 0x1c, 0x6c, 0xe2,
 					0x4d, 0x16, 0x5d, 0xab, 0x93, 0xe8, 0x64, 0x33}
-				return btcutil.NewAddressWitnessScriptHash(scriptHash, &chaincfg.TestNet3Params)
+				return godashutil.NewAddressWitnessScriptHash(scriptHash, &chaincfg.TestNet3Params)
 			},
 			net: &chaincfg.TestNet3Params,
 		},
@@ -650,7 +650,7 @@ func TestAddresses(t *testing.T) {
 
 	for _, test := range tests {
 		// Decode addr and compare error against valid.
-		decoded, err := btcutil.DecodeAddress(test.addr, test.net)
+		decoded, err := godashutil.DecodeAddress(test.addr, test.net)
 		if (err == nil) != test.valid {
 			t.Errorf("%v: decoding test failed: %v", test.name, err)
 			return
@@ -687,20 +687,20 @@ func TestAddresses(t *testing.T) {
 			// Perform type-specific calculations.
 			var saddr []byte
 			switch d := decoded.(type) {
-			case *btcutil.AddressPubKeyHash:
-				saddr = btcutil.TstAddressSAddr(encoded)
+			case *godashutil.AddressPubKeyHash:
+				saddr = godashutil.TstAddressSAddr(encoded)
 
-			case *btcutil.AddressScriptHash:
-				saddr = btcutil.TstAddressSAddr(encoded)
+			case *godashutil.AddressScriptHash:
+				saddr = godashutil.TstAddressSAddr(encoded)
 
-			case *btcutil.AddressPubKey:
+			case *godashutil.AddressPubKey:
 				// Ignore the error here since the script
 				// address is checked below.
 				saddr, _ = hex.DecodeString(d.String())
-			case *btcutil.AddressWitnessPubKeyHash:
-				saddr = btcutil.TstAddressSegwitSAddr(encoded)
-			case *btcutil.AddressWitnessScriptHash:
-				saddr = btcutil.TstAddressSegwitSAddr(encoded)
+			case *godashutil.AddressWitnessPubKeyHash:
+				saddr = godashutil.TstAddressSegwitSAddr(encoded)
+			case *godashutil.AddressWitnessScriptHash:
+				saddr = godashutil.TstAddressSegwitSAddr(encoded)
 			}
 
 			// Check script address, as well as the Hash160 method for P2PKH and
@@ -711,28 +711,28 @@ func TestAddresses(t *testing.T) {
 				return
 			}
 			switch a := decoded.(type) {
-			case *btcutil.AddressPubKeyHash:
+			case *godashutil.AddressPubKeyHash:
 				if h := a.Hash160()[:]; !bytes.Equal(saddr, h) {
 					t.Errorf("%v: hashes do not match:\n%x != \n%x",
 						test.name, saddr, h)
 					return
 				}
 
-			case *btcutil.AddressScriptHash:
+			case *godashutil.AddressScriptHash:
 				if h := a.Hash160()[:]; !bytes.Equal(saddr, h) {
 					t.Errorf("%v: hashes do not match:\n%x != \n%x",
 						test.name, saddr, h)
 					return
 				}
 
-			case *btcutil.AddressWitnessPubKeyHash:
+			case *godashutil.AddressWitnessPubKeyHash:
 				if hrp := a.Hrp(); test.net.Bech32HRPSegwit != hrp {
 					t.Errorf("%v: hrps do not match:\n%x != \n%x",
 						test.name, test.net.Bech32HRPSegwit, hrp)
 					return
 				}
 
-				expVer := test.result.(*btcutil.AddressWitnessPubKeyHash).WitnessVersion()
+				expVer := test.result.(*godashutil.AddressWitnessPubKeyHash).WitnessVersion()
 				if v := a.WitnessVersion(); v != expVer {
 					t.Errorf("%v: witness versions do not match:\n%x != \n%x",
 						test.name, expVer, v)
@@ -745,14 +745,14 @@ func TestAddresses(t *testing.T) {
 					return
 				}
 
-			case *btcutil.AddressWitnessScriptHash:
+			case *godashutil.AddressWitnessScriptHash:
 				if hrp := a.Hrp(); test.net.Bech32HRPSegwit != hrp {
 					t.Errorf("%v: hrps do not match:\n%x != \n%x",
 						test.name, test.net.Bech32HRPSegwit, hrp)
 					return
 				}
 
-				expVer := test.result.(*btcutil.AddressWitnessScriptHash).WitnessVersion()
+				expVer := test.result.(*godashutil.AddressWitnessScriptHash).WitnessVersion()
 				if v := a.WitnessVersion(); v != expVer {
 					t.Errorf("%v: witness versions do not match:\n%x != \n%x",
 						test.name, expVer, v)
