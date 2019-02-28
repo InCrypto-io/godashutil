@@ -8,8 +8,8 @@ package hdkeychain_test
 import (
 	"fmt"
 
-	"github.com/nargott/godash/chaincfg"
-	"github.com/nargott/godashutil/hdkeychain"
+	"github.com/incrypto-io/godash/chaincfg"
+	"github.com/incrypto-io/godashutil/hdkeychain"
 )
 
 // This example demonstrates how to generate a cryptographically random seed

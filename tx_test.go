@@ -10,9 +10,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/nargott/godash/chaincfg/chainhash"
-	"github.com/nargott/godashutil"
 	"github.com/davecgh/go-spew/spew"
+	"github.com/incrypto-io/godash/chaincfg/chainhash"
+	"github.com/incrypto-io/godashutil"
 )
 
 // TestTx tests the API for Tx.

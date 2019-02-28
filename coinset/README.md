@@ -16,7 +16,7 @@ report.
 ## Installation and Updating
 
 ```bash
-$ go get -u github.com/nargott/godashutil/coinset
+$ go get -u github.com/incrypto-io/godashutil/coinset
 ```
 
 ## Usage

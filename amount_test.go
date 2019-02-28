@@ -9,7 +9,7 @@ import (
 	"math"
 	"testing"
 
-	. "github.com/nargott/godashutil"
+	. "github.com/incrypto-io/godashutil"
 )
 
 func TestAmountCreation(t *testing.T) {

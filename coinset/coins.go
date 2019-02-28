@@ -9,9 +9,9 @@ import (
 	"errors"
 	"sort"
 
-	"github.com/nargott/godash/chaincfg/chainhash"
-	"github.com/nargott/godash/wire"
-	"github.com/nargott/godashutil"
+	"github.com/incrypto-io/godash/chaincfg/chainhash"
+	"github.com/incrypto-io/godash/wire"
+	"github.com/incrypto-io/godashutil"
 )
 
 // Coin represents a spendable transaction outpoint

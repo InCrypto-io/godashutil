@@ -8,8 +8,8 @@ import (
 	"bytes"
 	"io"
 
-	"github.com/nargott/godash/chaincfg/chainhash"
-	"github.com/nargott/godash/wire"
+	"github.com/incrypto-io/godash/chaincfg/chainhash"
+	"github.com/incrypto-io/godash/wire"
 )
 
 // TxIndexUnknown is the value returned for a transaction index that is unknown.

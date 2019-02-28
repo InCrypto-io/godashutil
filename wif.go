@@ -8,10 +8,10 @@ import (
 	"bytes"
 	"errors"
 
-	"github.com/nargott/godash/btcec"
-	"github.com/nargott/godash/chaincfg"
-	"github.com/nargott/godash/chaincfg/chainhash"
-	"github.com/nargott/godashutil/base58"
+	"github.com/incrypto-io/godash/btcec"
+	"github.com/incrypto-io/godash/chaincfg"
+	"github.com/incrypto-io/godash/chaincfg/chainhash"
+	"github.com/incrypto-io/godashutil/base58"
 )
 
 // ErrMalformedPrivateKey describes an error where a WIF-encoded private

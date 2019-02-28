@@ -11,10 +11,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/nargott/godash/btcec"
-	"github.com/nargott/godash/chaincfg"
-	"github.com/nargott/godashutil/base58"
-	"github.com/nargott/godashutil/bech32"
+	"github.com/incrypto-io/godash/btcec"
+	"github.com/incrypto-io/godash/chaincfg"
+	"github.com/incrypto-io/godashutil/base58"
+	"github.com/incrypto-io/godashutil/bech32"
 	"golang.org/x/crypto/ripemd160"
 )
 

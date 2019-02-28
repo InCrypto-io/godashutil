@@ -8,7 +8,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"github.com/nargott/godashutil/bech32"
+	"github.com/incrypto-io/godashutil/bech32"
 )
 
 // This example demonstrates how to decode a bech32 encoded string.

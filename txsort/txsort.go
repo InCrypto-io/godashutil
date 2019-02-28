@@ -11,8 +11,8 @@ import (
 	"bytes"
 	"sort"
 
-	"github.com/nargott/godash/chaincfg/chainhash"
-	"github.com/nargott/godash/wire"
+	"github.com/incrypto-io/godash/chaincfg/chainhash"
+	"github.com/incrypto-io/godash/wire"
 )
 
 // InPlaceSort modifies the passed transaction inputs and outputs to be sorted

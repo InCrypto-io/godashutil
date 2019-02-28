@@ -8,9 +8,9 @@ package godashutil_test
 import (
 	"testing"
 
-	"github.com/nargott/godash/btcec"
-	"github.com/nargott/godash/chaincfg"
-	. "github.com/nargott/godashutil"
+	"github.com/incrypto-io/godash/btcec"
+	"github.com/incrypto-io/godash/chaincfg"
+	. "github.com/incrypto-io/godashutil"
 )
 
 func TestEncodeDecodeWIF(t *testing.T) {

@@ -12,8 +12,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/nargott/godash/chaincfg"
-	"github.com/nargott/godashutil"
+	"github.com/incrypto-io/godash/chaincfg"
+	"github.com/incrypto-io/godashutil"
 	"golang.org/x/crypto/ripemd160"
 )
 

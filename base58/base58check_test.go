@@ -8,7 +8,7 @@ package base58_test
 import (
 	"testing"
 
-	"github.com/nargott/godashutil/base58"
+	"github.com/incrypto-io/godashutil/base58"
 )
 
 var checkEncodingStringTests = []struct {

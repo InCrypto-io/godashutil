@@ -8,7 +8,7 @@ package hdkeychain_test
 import (
 	"testing"
 
-	"github.com/nargott/godashutil/hdkeychain"
+	"github.com/incrypto-io/godashutil/hdkeychain"
 )
 
 // bip0032MasterPriv1 is the master private extended key from the first set of

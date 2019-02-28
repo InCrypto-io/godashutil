@@ -15,7 +15,7 @@ report.
 ## Installation and Updating
 
 ```bash
-$ go get -u github.com/nargott/godashutil/bloom
+$ go get -u github.com/incrypto-io/godashutil/bloom
 ```
 
 ## Examples

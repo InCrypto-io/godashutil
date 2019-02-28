@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/nargott/godashutil"
+	"github.com/incrypto-io/godashutil"
 )
 
 func ExampleAmount() {

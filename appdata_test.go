@@ -13,7 +13,7 @@ import (
 	"testing"
 	"unicode"
 
-	"github.com/nargott/godashutil"
+	"github.com/incrypto-io/godashutil"
 )
 
 // TestAppDataDir tests the API for AppDataDir to ensure it gives expected

@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/nargott/godash/wire"
-	"github.com/nargott/godashutil/txsort"
+	"github.com/incrypto-io/godash/wire"
+	"github.com/incrypto-io/godashutil/txsort"
 )
 
 // TestSort ensures the transaction sorting works according to the BIP.

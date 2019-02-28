@@ -21,7 +21,7 @@ provided.
 ## Installation and Updating
 
 ```bash
-$ go get -u github.com/nargott/godashutil
+$ go get -u github.com/incrypto-io/godashutil
 ```
 
 ## GPG Verification Key

@@ -16,7 +16,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/nargott/godash/chaincfg"
+	"github.com/incrypto-io/godash/chaincfg"
 )
 
 // TestBIP0032Vectors tests the vectors provided by [BIP32] to ensure the

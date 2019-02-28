@@ -9,7 +9,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/nargott/godashutil/base58"
+	"github.com/incrypto-io/godashutil/base58"
 )
 
 var stringTests = []struct {

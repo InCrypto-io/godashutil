@@ -9,7 +9,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/nargott/godashutil/base58"
+	"github.com/incrypto-io/godashutil/base58"
 )
 
 func BenchmarkBase58Encode(b *testing.B) {
